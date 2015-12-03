@@ -1,0 +1,19 @@
+{
+  "name": "xoreos-editor",
+  "version": "0.0.0",
+  "description": "Explore the Aurora engine internals using Atom",
+  "main": "./lib/xoreos-editor",
+  "dependencies": {
+    "atom-space-pen-views": "^2.0.0",
+    "fs-plus": "^2",
+    "humanize-plus": "~1.4.2",
+    "ls-archive": "^1.2.1",
+    "serializable": "^1",
+    "temp": "~0.8.1"
+  },
+  "repository": "https://github.com/berenm/xoreos-editor",
+  "license": "MIT",
+  "engines": {
+    "atom": "*"
+  }
+}
