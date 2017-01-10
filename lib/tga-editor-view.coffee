@@ -12,5 +12,5 @@ class TGAEditorView extends FileEditorView
             @img outlet: 'image'
 
   refresh: ->
-    exec("convert #{@path} #{@path}.png")
+    exec("convert '#{@path}' '#{@path}.png'")
     @image.attr('src', "#{@path}.png")

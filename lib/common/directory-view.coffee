@@ -15,11 +15,11 @@ class DirectoryView extends EntryView
 
   activate: -> if @isExpanded then @collapse() else @expand()
 
-  expand: () ->
+  expand: ->
     @toggleClass('expanded')
     @toggleClass('collapsed')
 
-    if @isExpanded == null
+    if @isExpanded is null
       for child in @entry.children
         if child.isDirectory()
           @entries.append(new DirectoryView(@archivePath, child, @callback))
@@ -28,7 +28,7 @@ class DirectoryView extends EntryView
 
     @isExpanded = true
 
-  collapse: (isRecursive=false) ->
+  collapse: (isRecursive = false) ->
     @isExpanded = false
     @toggleClass('expanded')
     @toggleClass('collapsed')

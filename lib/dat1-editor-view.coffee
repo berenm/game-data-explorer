@@ -3,15 +3,14 @@ path = require 'path'
 fs = require 'fs-plus'
 temp = require 'temp'
 
-xoreos = require './common/xoreos'
+arcanum = require './common/arcanum'
 FileView = require './common/file-view'
 DirectoryView = require './common/directory-view'
 
 FileEditorView = require './file-editor-view'
-{KEYV1} = require './data/keyv1'
 
 module.exports =
-class KEYEditorView extends FileEditorView
+class DAT1EditorView extends FileEditorView
   @content: ->
     @div class: 'xoreos-editor', tabindex: -1, =>
       @div class: 'xoreos-container', =>
@@ -39,7 +38,7 @@ class KEYEditorView extends FileEditorView
       if error?
         console.error("Error creating temp directory: #{tempDirPath}", error)
       else
-        xoreos.list @path, (error, @keyFile, entries) =>
+        arcanum.list @path, (error, @file, entries) =>
           return unless originalPath is @path
 
           @loadingMessage.hide()
@@ -54,7 +53,7 @@ class KEYEditorView extends FileEditorView
   openFile: (entry) ->
     return unless not entry.isDirectory()
     entryPath = entry.getPath().substring(@path.length + 1)
-    xoreos.readFile @keyFile, @path, entryPath, (error, contents) =>
+    arcanum.readFile @file, @path, entryPath, (error, contents) =>
       if error?
         console.error("Error reading: #{entryPath} from #{@path}", error)
       else
@@ -70,11 +69,9 @@ class KEYEditorView extends FileEditorView
 
     for entry in entries
       if entry.isDirectory()
-        @tree.append(
-          new DirectoryView(@path, entry, (entry) => @openFile(entry)))
+        @tree.append(new DirectoryView(@path, entry, (entry) => @openFile(entry)))
       else
-        @tree.append(
-          new FileView(@path, entry, (entry) => @openFile(entry)))
+        @tree.append(new FileView(@path, entry, (entry) => @openFile(entry)))
 
     @tree.show()
     @tree.find('.file').view()?.select()

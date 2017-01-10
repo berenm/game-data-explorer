@@ -13,7 +13,7 @@ class MDLASCIIParser
         children[node.parent] ?= []
         children[node.parent].push(node)
 
-        if node.parent == 'null'
+        if node.parent is 'null'
           geometry.rootNode = node
 
       for node in geometry.nodes
@@ -23,7 +23,6 @@ class MDLASCIIParser
           node.children = []
 
       geometry.nodes = null
-
     return mdlFile
 
 module.exports =

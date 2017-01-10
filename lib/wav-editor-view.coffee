@@ -12,5 +12,5 @@ class WAVEditorView extends FileEditorView
             @audio controls: true, outlet: 'audio'
 
   refresh: ->
-    exec("avconv -y -i #{@path} #{@path}.wav")
+    exec("avconv -y -i '#{@path}' '#{@path}'.wav")
     @audio.attr('src', "#{@path}.wav")

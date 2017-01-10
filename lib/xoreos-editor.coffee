@@ -5,27 +5,34 @@ KEYEditor = require './key-editor'
 TGAEditor = require './tga-editor'
 WAVEditor = require './wav-editor'
 MDLEditor = require './mdl-editor'
+BFEditor = require './bf-editor'
+DAT1Editor = require './dat1-editor'
+ARTEditor = require './art-editor'
+GLTFEditor = require './gltf-editor'
 
 module.exports =
 class XoreosEditor
-  @config:
-    executablePath:
-      title: 'Path to xoreos-cli'
-      type: 'string'
-      default: '/usr/bin/xoreos-cli'
+  @editors:
+    '.key': (filePath) -> return new KEYEditor(path: filePath)
+    '.mdl': (filePath) -> return new MDLEditor(path: filePath)
+    '.tga': (filePath) -> return new TGAEditor(path: filePath)
+    '.wav': (filePath) -> return new WAVEditor(path: filePath)
+    '.wad': (filePath) -> return new WAVEditor(path: filePath)
+    '.waa': (filePath) -> return new WAVEditor(path: filePath)
+    '.wam': (filePath) -> return new WAVEditor(path: filePath)
+    '.wac': (filePath) -> return new WAVEditor(path: filePath)
+    '.dat': (filePath) -> return new DAT1Editor(path: filePath)
+    '.art': (filePath) -> return new ARTEditor(path: filePath)
+    '.bf': (filePath) -> return new BFEditor(path: filePath)
+    '.gltf': (filePath) -> return new GLTFEditor(path: filePath)
 
   @activate: ->
-    @opener = atom.workspace.addOpener (filePath='') ->
+    @opener = atom.workspace.addOpener (filePath = '') =>
       if fs.isFileSync(filePath)
-        switch path.extname(filePath)
-          when '.key'
-            return new KEYEditor(path: filePath)
-          when '.mdl'
-            return new MDLEditor(path: filePath)
-          when '.tga'
-            return new TGAEditor(path: filePath)
-          when '.wav'
-            return new WAVEditor(path: filePath)
+        extName = path.extname(filePath).toLowerCase()
+        callback = @editors[extName]
+        if callback isnt undefined
+          return callback filePath
 
   @deactivate: ->
     @opener.dispose()

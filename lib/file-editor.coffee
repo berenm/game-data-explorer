@@ -13,7 +13,7 @@ class FileEditor extends Serializable
     @emitter = new Emitter()
 
   serializeParams: -> path: @getPath()
-  deserializeParams: (params={}) ->
+  deserializeParams: (params = {}) ->
     if fs.isFileSync(params.path)
       params
     else

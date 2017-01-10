@@ -39,7 +39,7 @@ class MDLEditorView extends FileEditorView
     setTimeout => @onResize()
 
     @controls = new THREE.OrbitControls @camera, @canvas
-    @controls.addEventListener 'change', () => @renderer.render @scene, @camera
+    @controls.addEventListener 'change', => @renderer.render @scene, @camera
     @controls.enableDamping = true
     @controls.dampingFactor = 0.25
     @controls.enableZoom = true
@@ -52,13 +52,13 @@ class MDLEditorView extends FileEditorView
 
     makeMesh = (node) ->
       mesh = null
-      if node.type == 'trimesh'
+      if node.type is 'trimesh'
         faceList = node.faces.list
         indices = new Uint32Array faceList.length * 3
-        for face,i in faceList
-          indices[3*i+0] = face[0]
-          indices[3*i+1] = face[1]
-          indices[3*i+2] = face[2]
+        for face, i in faceList
+          indices[3 * i + 0] = face[0]
+          indices[3 * i + 1] = face[1]
+          indices[3 * i + 2] = face[2]
 
         vertices = new Float32Array node.vertices.list
 
@@ -66,11 +66,11 @@ class MDLEditorView extends FileEditorView
         geometry.setIndex new THREE.BufferAttribute(indices, 1)
         geometry.addAttribute 'position', new THREE.BufferAttribute(vertices, 3)
 
-        material = new THREE.MeshBasicMaterial { wireframe: true }
+        material = new THREE.MeshBasicMaterial {wireframe: true}
         mesh = new THREE.Mesh geometry, material
 
       else
-        mesh = new THREE.Object3D
+        mesh = new THREE.Object3D()
 
       if node.position?
         mesh.translateX(node.position[0])
@@ -86,12 +86,12 @@ class MDLEditorView extends FileEditorView
 
       return mesh
 
-    group = new THREE.Object3D
+    group = new THREE.Object3D()
     for geometry in @model.geometries
       group.add makeMesh(geometry.rootNode)
 
     group.rotateZ Math.PI
-    group.rotateX(Math.PI/2.0)
+    group.rotateX(Math.PI / 2.0)
 
     # group.computeBoundingSphere()
     # @camera.position.z = group.boundingSphere.radius * 3
