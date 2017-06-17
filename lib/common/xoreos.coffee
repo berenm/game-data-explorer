@@ -3,9 +3,9 @@ path = require 'path'
 cprocess = require 'child_process'
 spawn = cprocess.spawn
 
-{KEYV1} = require './data/keyv1'
-{BIFFV1} = require './data/biffv1'
-ArchiveEntry = require './common/archive-entry'
+{KEYV1} = require '../data/keyv1'
+{BIFFV1} = require '../data/biffv1'
+ArchiveEntry = require '../common/archive-entry'
 
 module.exports =
   readFile: (keyFile, archivePath, entryPath, callback) ->
