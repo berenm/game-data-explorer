@@ -7,6 +7,7 @@ WAVEditor = require './wav-editor'
 MDLEditor = require './mdl-editor'
 BFEditor = require './bf-editor'
 DAT1Editor = require './dat1-editor'
+PCKEditor = require './pck-editor'
 ARTEditor = require './art-editor'
 GLTFEditor = require './gltf-editor'
 
@@ -22,6 +23,7 @@ class XoreosEditor
     '.wam': (filePath) -> return new WAVEditor(path: filePath)
     '.wac': (filePath) -> return new WAVEditor(path: filePath)
     '.dat': (filePath) -> return new DAT1Editor(path: filePath)
+    '.pck': (filePath) -> return new PCKEditor(path: filePath)
     '.art': (filePath) -> return new ARTEditor(path: filePath)
     '.bf': (filePath) -> return new BFEditor(path: filePath)
     '.gltf': (filePath) -> return new GLTFEditor(path: filePath)
