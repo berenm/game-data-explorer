@@ -3,7 +3,7 @@ path = require 'path'
 cprocess = require 'child_process'
 spawn = cprocess.spawn
 
-{DAT1} = require '../data/dat1'
+{DAT1} = require '../data/arcanum/dat1'
 ArchiveEntry = require './archive-entry'
 
 zlib = require 'zlib'

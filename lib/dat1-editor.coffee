@@ -1,5 +1,5 @@
 FileEditor = require './file-editor'
-{DAT1} = require './data/dat1'
+{DAT1} = require './data/arcanum/dat1'
 
 module.exports =
 class DAT1Editor extends FileEditor
