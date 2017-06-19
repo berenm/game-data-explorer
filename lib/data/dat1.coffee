@@ -49,6 +49,7 @@ class DAT1
     @fileSize = (fs.fstatSync @file).size
     @footer = @parse DAT1.footerParser, @fileSize - DAT1.footerParser.size
 
+  list: ->
     indexParser = DAT1.indexParser
     indexParser.size = @footer.index_offset - DAT1.footerParser.size
     @index = @parse indexParser, @fileSize - @footer.index_offset
@@ -58,7 +59,6 @@ class DAT1
       if DAT1.types[file.type] isnt 'folder'
         @files[file.name.replace /\\/g, '/'] = file
 
-  list: ->
     out = []
     for filePath, file of @files
       out.push path.join(@path, filePath)

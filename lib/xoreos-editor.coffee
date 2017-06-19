@@ -22,7 +22,9 @@ class XoreosEditor
     '.waa': (filePath) -> return new WAVEditor(path: filePath)
     '.wam': (filePath) -> return new WAVEditor(path: filePath)
     '.wac': (filePath) -> return new WAVEditor(path: filePath)
-    '.dat': (filePath) -> return new DAT1Editor(path: filePath)
+    '.dat': (filePath) ->
+      try return new DAT1Editor(path: filePath) catch
+      return null
     '.pck': (filePath) -> return new PCKEditor(path: filePath)
     '.art': (filePath) -> return new ARTEditor(path: filePath)
     '.bf': (filePath) -> return new BFEditor(path: filePath)
