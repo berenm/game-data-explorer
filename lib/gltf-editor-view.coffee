@@ -12,8 +12,8 @@ THREE.GLTFLoader = GLTFLoader THREE
 module.exports =
 class GLTFEditorView extends FileEditorView
   @content: ->
-    @div class: 'xoreos-editor', tabindex: -1, =>
-      @div class: 'xoreos-container', =>
+    @div class: 'gde-editor', tabindex: -1, =>
+      @div class: 'gde-container', =>
         @div class: 'model-container', =>
           @div class: 'model-cell', =>
             @span class: 'model', outlet: 'container'

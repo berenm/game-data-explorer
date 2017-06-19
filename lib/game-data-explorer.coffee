@@ -14,7 +14,7 @@ ARTEditor = require './art-editor'
 GLTFEditor = require './gltf-editor'
 
 module.exports =
-class XoreosEditor
+class GameDataExplorer
   @editors:
     '.key': (filePath) -> return new KEYEditor(path: filePath)
     '.mdl': (filePath) -> return new MDLEditor(path: filePath)

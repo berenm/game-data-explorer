@@ -14,17 +14,17 @@ class EntryView extends View
 
       'core:move-down': =>
         if @isSelected()
-          entries = @closest('.xoreos-editor').find('.entry')
+          entries = @closest('.gde-editor').find('.entry')
           $(entries[entries.index(@name) + 1]).view()?.select()
 
       'core:move-up': =>
         if @isSelected()
-          entries = @closest('.xoreos-editor').find('.entry')
+          entries = @closest('.gde-editor').find('.entry')
           $(entries[entries.index(@name) - 1]).view()?.select()
 
   isSelected: -> @hasClass('selected')
 
   select: ->
-    @closest('.xoreos-editor').find('.selected').toggleClass('selected')
+    @closest('.gde-editor').find('.selected').toggleClass('selected')
     @addClass('selected')
     @focus()

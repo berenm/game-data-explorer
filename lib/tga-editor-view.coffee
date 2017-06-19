@@ -5,8 +5,8 @@ exec = require('child_process').execSync
 module.exports =
 class TGAEditorView extends FileEditorView
   @content: ->
-    @div class: 'xoreos-editor', tabindex: -1, =>
-      @div class: 'xoreos-container', =>
+    @div class: 'gde-editor', tabindex: -1, =>
+      @div class: 'gde-container', =>
         @div class: 'image-container', =>
           @div class: 'image-cell', =>
             @img outlet: 'image'

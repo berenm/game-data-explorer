@@ -1,4 +1,4 @@
-xoreos-editor package
+game-data-explorer
 =================================================
 
-Explore the Aurora engine internals using Atom.
+Explore video game engines assets using Atom.

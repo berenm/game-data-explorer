@@ -34,6 +34,6 @@ class DirectoryView extends EntryView
     @toggleClass('collapsed')
 
   select: ->
-    @closest('.xoreos-editor').find('.selected').toggleClass('selected')
+    @closest('.gde-editor').find('.selected').toggleClass('selected')
     @addClass('selected')
     @focus()

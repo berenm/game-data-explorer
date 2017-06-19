@@ -10,13 +10,13 @@ FileEditorView = require './file-editor-view'
 module.exports =
 class ArchiveEditorView extends FileEditorView
   @content: ->
-    @div class: 'xoreos-editor', tabindex: -1, =>
-      @div class: 'xoreos-container', =>
+    @div class: 'gde-editor', tabindex: -1, =>
+      @div class: 'gde-container', =>
         @div outlet: 'loadingMessage', class: 'padded icon icon-hourglass text-info', 'Loading content\u2026'
         @div outlet: 'errorMessage', class: 'padded icon icon-alert text-error'
         @div class: 'inset-panel', =>
           @div outlet: 'summary', class: 'panel-heading'
-          @ol outlet: 'tree', class: 'xoreos-tree padded list-tree has-collapsable-children'
+          @ol outlet: 'tree', class: 'gde-tree padded list-tree has-collapsable-children'
 
   initialize: (editor) ->
     super(editor)

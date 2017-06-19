@@ -1,8 +1,8 @@
 {
-  "name": "xoreos-editor",
+  "name": "game-data-explorer",
   "version": "0.0.0",
-  "description": "Explore the Aurora engine internals using Atom",
-  "main": "./lib/xoreos-editor",
+  "description": "Explore video game engines assets using Atom",
+  "main": "./lib/game-data-explorer",
   "dependencies": {
     "atom-space-pen-views": "^2.0.0",
     "fs-plus": "^2",
@@ -16,7 +16,7 @@
     "three": "^0",
     "three-orbit-controls": "^0"
   },
-  "repository": "https://github.com/berenm/xoreos-editor",
+  "repository": "https://github.com/berenm/game-data-explorer",
   "license": "MIT",
   "engines": {
     "atom": "*"
