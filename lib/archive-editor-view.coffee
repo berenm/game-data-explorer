@@ -21,10 +21,6 @@ class ArchiveEditorView extends FileEditorView
   initialize: (editor) ->
     super(editor)
 
-    @on 'focus', =>
-      @focusSelectedFile()
-      false
-
   refresh: ->
     @summary.hide()
     @tree.hide()
@@ -84,6 +80,3 @@ class ArchiveEditorView extends FileEditorView
     directoryLabel = if directoryCount is 1 then '1 folder' else "#{humanize.intComma(directoryCount)} folders"
 
     @summary.text("#{humanize.fileSize(fs.getSizeSync(@path))} with #{fileLabel} and #{directoryLabel}").show()
-
-  focusSelectedFile: -> @tree.find('.selected').view()?.focus()
-  focus: -> @focusSelectedFile()
