@@ -22,6 +22,7 @@ class DIR
   parseEntries: (folder) ->
     loop
       entry = @parse DIR.entryParser
+      entry.name = entry.name.replace /\x00.*$/g, ''
       entry.name = "#{folder}#{entry.name}"
       @files[entry.name] = entry     if entry.type is 0xcdcdcd00
       @parseEntries "#{entry.name}/" if entry.type is 0xcdcdcd01
