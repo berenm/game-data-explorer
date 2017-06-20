@@ -4,10 +4,9 @@
   "description": "Explore video game engines assets using Atom",
   "main": "./lib/game-data-explorer",
   "dependencies": {
-    "atom-space-pen-views": "^2.0.0",
+    "atom-space-pen-views": "^2.0.3",
     "fs-plus": "^2",
     "humanize-plus": "~1.4.2",
-    "ls-archive": "^1.2.1",
     "serializable": "^1",
     "temp": "~0.8.1",
     "loophole": "^0",
@@ -17,8 +16,8 @@
     "three-orbit-controls": "^0"
   },
   "repository": "https://github.com/berenm/game-data-explorer",
-  "license": "MIT",
+  "license": "UNLICENSE",
   "engines": {
-    "atom": "*"
+    "atom": ">=0.174.0 <2.0.0"
   }
 }
