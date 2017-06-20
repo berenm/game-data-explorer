@@ -10,7 +10,7 @@
     "serializable": "^1",
     "temp": "~0.8.1",
     "loophole": "^0",
-    "binary-parser": "git+https://github.com/keichi/binary-parser",
+    "binary-parser": "^1.1.5",
     "lzo": "^0",
     "three": "^0",
     "three-orbit-controls": "^0"
