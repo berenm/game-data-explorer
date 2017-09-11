@@ -12,6 +12,9 @@ DIREditor = require './dir-editor'
 PCKEditor = require './pck-editor'
 ARTEditor = require './art-editor'
 GLTFEditor = require './gltf-editor'
+HEXEditor = require './hex-editor'
+
+textOrBin = require 'istextorbinary'
 
 module.exports =
 class GameDataExplorer
@@ -41,6 +44,12 @@ class GameDataExplorer
         callback = @editors[extName]
         if callback isnt undefined
           return callback filePath
+
+        buffer = new Buffer 256
+        file = fs.openSync filePath, 'r'
+        fs.readSync file, buffer, 0, 256, 0
+        if textOrBin.isBinarySync filePath, buffer
+          return new HEXEditor(path: filePath)
 
   @deactivate: ->
     @opener.dispose()

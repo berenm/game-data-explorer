@@ -13,7 +13,8 @@
     "binary-parser": "^1.1.5",
     "lzo": "^0",
     "three": "^0",
-    "three-orbit-controls": "^0"
+    "three-orbit-controls": "^0",
+    "istextorbinary": "^2.1.0"
   },
   "repository": "https://github.com/berenm/game-data-explorer",
   "license": "UNLICENSE",
