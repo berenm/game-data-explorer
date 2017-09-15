@@ -88,23 +88,34 @@
       white-space: nowrap;
       -webkit-user-select: none;
 
+      .hex-line {
+        display: block;
+      }
+
+      .hex-metric {
+        visibility: hidden;
+        position: absolute;
+      }
+
       .hex-offset {
+        display: inline;
+        vertical-align: middle;
         margin-right: 10px;
-        display: inline-block;
-        float: left;
+
         color: @syntax-gutter-text-color;
         background: @syntax-gutter-background-color;
       }
 
       .hex-bytes {
-        margin-right: 10px;
         display: inline-block;
-        float: left;
+        margin-right: 10px;
         color: @syntax-text-color;
+        background: @syntax-background-color;
 
         .hex-byte {
           display: inline;
-          padding: 0px 5px;
+          vertical-align: middle;
+          padding: 2px 3px 2px 3px;
         }
 
         .generate-colors(255);
@@ -118,13 +129,15 @@
       }
 
       .hex-chars {
-        margin-right: 10px;
         display: inline-block;
+        margin-right: 10px;
         color: @syntax-gutter-text-color;
         background: @syntax-gutter-background-color;
 
         .hex-char {
           display: inline;
+          vertical-align: middle;
+          padding: 2px 0 2px 0;
         }
       }
     }
