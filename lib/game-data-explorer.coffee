@@ -47,8 +47,8 @@ class GameDataExplorer
 
         buffer = new Buffer 256
         file = fs.openSync filePath, 'r'
-        fs.readSync file, buffer, 0, 256, 0
-        if textOrBin.isBinarySync filePath, buffer
+        bytes = fs.readSync file, buffer, 0, 256, 0
+        if textOrBin.isBinarySync filePath, buffer.slice(0, bytes)
           return new HEXEditor(path: filePath)
 
   @deactivate: ->
