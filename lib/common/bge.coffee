@@ -5,7 +5,7 @@ spawn = cprocess.spawn
 lzo = require 'lzo'
 
 {BF} = require '../data/bf'
-ArchiveEntry = require './archive-entry'
+{FileEntry, DirectoryEntry} = require '../core/archive-entry'
 
 module.exports =
   readFile: (bfFile, archivePath, entryPath, callback) ->
@@ -25,8 +25,8 @@ module.exports =
   list: (archivePath, callback) ->
     bfFile = new BF archivePath
 
-    entry = new ArchiveEntry(archivePath, 5)
+    entry = new DirectoryEntry({path: archivePath})
     for filePath in bfFile.list()
-      entry.add(new ArchiveEntry(filePath, 0))
+      entry.addChild(new FileEntry({path: filePath}))
 
     callback null, bfFile, [entry]

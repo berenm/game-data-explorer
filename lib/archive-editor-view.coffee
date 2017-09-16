@@ -46,7 +46,7 @@ class ArchiveEditorView extends FileEditorView
 
   openFile: (entry) ->
     return unless not entry.isDirectory()
-    entryPath = entry.getPath().substring(@path.length + 1)
+    entryPath = entry.path.substring(@path.length + 1)
     @readFile @keyFile, @path, entryPath, (error, contents) =>
       if error?
         console.error("Error reading: #{entryPath} from #{@path}", error)

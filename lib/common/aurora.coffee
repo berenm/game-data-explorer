@@ -5,7 +5,7 @@ spawn = cprocess.spawn
 
 {KEYV1} = require '../data/keyv1'
 {BIFFV1} = require '../data/biffv1'
-ArchiveEntry = require '../common/archive-entry'
+{FileEntry, DirectoryEntry} = require '../core/archive-entry'
 
 module.exports =
   readFile: (keyFile, archivePath, entryPath, callback) ->
@@ -23,8 +23,8 @@ module.exports =
   list: (archivePath, callback) ->
     keyFile = new KEYV1 archivePath
 
-    entry = new ArchiveEntry(archivePath, 5)
+    entry = new DirectoryEntry({path: archivePath})
     for resPath in keyFile.list()
-      entry.add(new ArchiveEntry(resPath, 0))
+      entry.addChild(new FileEntry({path: resPath}))
 
     callback null, keyFile, [entry]

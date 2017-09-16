@@ -4,7 +4,7 @@ cprocess = require 'child_process'
 spawn = cprocess.spawn
 
 {DAT1} = require '../data/arcanum/dat1'
-ArchiveEntry = require './archive-entry'
+{FileEntry, DirectoryEntry} = require '../core/archive-entry'
 
 zlib = require 'zlib'
 
@@ -25,8 +25,8 @@ module.exports =
   list: (archivePath, callback) ->
     file = new DAT1 archivePath
 
-    entry = new ArchiveEntry(archivePath, 5)
+    entry = new DirectoryEntry({path: archivePath})
     for filePath in file.list()
-      entry.add(new ArchiveEntry(filePath, 0))
+      entry.addChild(new FileEntry({path: filePath}))
 
     callback null, file, [entry]

@@ -4,7 +4,7 @@ cprocess = require 'child_process'
 spawn = cprocess.spawn
 
 {DAT} = require '../data/fallout/dat'
-ArchiveEntry = require './archive-entry'
+{FileEntry, DirectoryEntry} = require '../core/archive-entry'
 
 {LZSS} = require '../data/fallout/lzss'
 
@@ -26,8 +26,8 @@ module.exports =
   list: (archivePath, callback) ->
     file = new DAT archivePath
 
-    entry = new ArchiveEntry(archivePath, 5)
+    entry = new DirectoryEntry({path: archivePath})
     for filePath in file.list()
-      entry.add(new ArchiveEntry(filePath, 0))
+      entry.addChild(new FileEntry({path: filePath}))
 
     callback null, file, [entry]

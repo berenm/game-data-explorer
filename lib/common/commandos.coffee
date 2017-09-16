@@ -4,7 +4,7 @@ cprocess = require 'child_process'
 spawn = cprocess.spawn
 
 {DIR} = require '../data/commandos/dir'
-ArchiveEntry = require './archive-entry'
+{FileEntry, DirectoryEntry} = require '../core/archive-entry'
 
 module.exports =
   readFile: (pckFile, archivePath, entryPath, callback) ->
@@ -17,8 +17,8 @@ module.exports =
   list: (archivePath, callback) ->
     file = new DIR archivePath
 
-    entry = new ArchiveEntry(archivePath, 5)
+    entry = new DirectoryEntry({path: archivePath})
     for filePath in file.list()
-      entry.add(new ArchiveEntry(filePath, 0))
+      entry.addChild(new FileEntry({path: filePath}))
 
     callback null, file, [entry]

@@ -6,7 +6,7 @@ class DirectoryView extends EntryView
   @content: (archivePath, entry) ->
     @li class: 'list-nested-item entry collapsed', =>
       @span class: 'list-item', =>
-        @span entry.getName(), class: 'directory icon icon-file-directory'
+        @span entry.name, class: 'directory icon icon-file-directory'
       @ol class: 'list-tree', outlet: 'entries'
 
   initialize: (@archivePath, @entry, @callback) ->
@@ -20,7 +20,7 @@ class DirectoryView extends EntryView
     @toggleClass('collapsed')
 
     if @isExpanded is null
-      for child in @entry.children
+      for k, child of @entry.children
         if child.isDirectory()
           @entries.append(new DirectoryView(@archivePath, child, @callback))
         else
