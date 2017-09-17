@@ -1,7 +1,7 @@
 FileEditorView = require './file-editor-view'
 
 fs = require 'fs'
-{MDLASCIIParser} = require './data/mdl-ascii'
+{MDLASCIIParser} = require './data/aurora/mdl-ascii'
 
 THREE = require 'three.js'
 OrbitControls = require 'three-orbit-controls'

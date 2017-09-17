@@ -1,16 +1,9 @@
 path = require 'path'
 fs = require 'fs-plus'
 
-KEYEditor = require './key-editor'
 TGAEditor = require './tga-editor'
 WAVEditor = require './wav-editor'
 MDLEditor = require './mdl-editor'
-BFEditor = require './bf-editor'
-DAT1Editor = require './dat1-editor'
-DATEditor = require './dat-editor'
-DIREditor = require './dir-editor'
-PCKEditor = require './pck-editor'
-ARTEditor = require './art-editor'
 GLTFEditor = require './gltf-editor'
 HEXEditor = require './hex-editor'
 
@@ -19,7 +12,9 @@ textOrBin = require 'istextorbinary'
 module.exports =
 class GameDataExplorer
   @editors:
-    '.key': (filePath) -> return new KEYEditor(path: filePath)
+    '.key': (filePath) ->
+      try return new (require './aurora-keyv1-editor')(path: filePath) catch
+      return null
     '.mdl': (filePath) -> return new MDLEditor(path: filePath)
     '.tga': (filePath) -> return new TGAEditor(path: filePath)
     '.wav': (filePath) -> return new WAVEditor(path: filePath)
@@ -27,14 +22,23 @@ class GameDataExplorer
     '.waa': (filePath) -> return new WAVEditor(path: filePath)
     '.wam': (filePath) -> return new WAVEditor(path: filePath)
     '.wac': (filePath) -> return new WAVEditor(path: filePath)
-    '.dir': (filePath) -> return new DIREditor(path: filePath)
-    '.dat': (filePath) ->
-      try return new DAT1Editor(path: filePath) catch
-      try return new DATEditor(path: filePath) catch
+    '.dir': (filePath) ->
+      try return new (require './commandos1-dir-editor')(path: filePath) catch
       return null
-    '.pck': (filePath) -> return new PCKEditor(path: filePath)
-    '.art': (filePath) -> return new ARTEditor(path: filePath)
-    '.bf': (filePath) -> return new BFEditor(path: filePath)
+    '.dat': (filePath) ->
+      try return new (require './arcanum-dat1-editor')(path: filePath) catch
+      try return new (require './fallout2-dat-editor')(path: filePath) catch
+      try return new (require './fallout1-dat-editor')(path: filePath) catch
+      return null
+    '.pck': (filePath) ->
+      try return new (require './commandos2-pck-editor')(path: filePath) catch
+      return null
+    '.art': (filePath) ->
+      try return new (require './arcanim-art-editor')(path: filePath) catch
+      return null
+    '.bf': (filePath) ->
+      try return new (require './beyond-good-and-evil-bf-editor')(path: filePath) catch
+      return null
     '.gltf': (filePath) -> return new GLTFEditor(path: filePath)
 
   @activate: ->
@@ -43,7 +47,8 @@ class GameDataExplorer
         extName = path.extname(filePath).toLowerCase()
         callback = @editors[extName]
         if callback isnt undefined
-          return callback filePath
+          editor = callback filePath
+          return editor if editor
 
         buffer = new Buffer 256
         file = fs.openSync filePath, 'r'

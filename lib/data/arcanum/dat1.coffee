@@ -1,9 +1,10 @@
 {allowUnsafeNewFunction} = require 'loophole'
 {Parser} = require 'binary-parser'
-{FourCC} = require '../../common/fourcc'
+{FourCC} = require '../fourcc'
 
 path = require 'path'
 fs = require 'fs'
+zlib = require 'zlib'
 
 class DAT1
   @fileParser = new Parser()
@@ -40,19 +41,16 @@ class DAT1
     1024: 'folder'
 
   parse: (parser, offset) ->
-    buffer = new Buffer parser.size
-    bytes = fs.readSync @file, buffer, 0, parser.size, offset
+    buffer = @file.readSync offset, parser.size
     return parser.parse(buffer)
 
-  constructor: (@path) ->
-    @file = fs.openSync @path, 'r'
-    @fileSize = (fs.fstatSync @file).size
-    @footer = @parse DAT1.footerParser, @fileSize - DAT1.footerParser.size
+  constructor: (@file) ->
+    @footer = @parse DAT1.footerParser, @file.size - DAT1.footerParser.size
 
   list: ->
     indexParser = DAT1.indexParser
     indexParser.size = @footer.index_offset - DAT1.footerParser.size
-    @index = @parse indexParser, @fileSize - @footer.index_offset
+    @index = @parse indexParser, @file.size - @footer.index_offset
 
     @files = []
     for file in @index.files
@@ -61,8 +59,14 @@ class DAT1
 
     out = []
     for filePath, file of @files
-      out.push path.join(@path, filePath)
+      out.push path.join(@file.path, filePath)
     return out
+
+  read: (entry) ->
+    if DAT1.types[entry.type] is 'zlib'
+      return zlib.inflateSync(@file.readSync entry.offset, entry.size_compressed)
+    else
+      return buffer = @file.readSync entry.offset, entry.size_uncompressed
 
 module.exports =
   DAT1: DAT1

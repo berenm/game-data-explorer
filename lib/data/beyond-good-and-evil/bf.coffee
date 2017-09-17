@@ -1,9 +1,10 @@
 {allowUnsafeNewFunction} = require 'loophole'
 {Parser} = require 'binary-parser'
-{FourCC} = require '../common/fourcc'
+{FourCC} = require '../fourcc'
 
 path = require 'path'
 fs = require 'fs'
+lzo = require 'lzo'
 
 class BF
   @entryParser = new Parser()
@@ -68,12 +69,10 @@ class BF
            file.name.trim()
 
   parse: (parser, offset) ->
-    buffer = new Buffer parser.size
-    bytes = fs.readSync @file, buffer, 0, parser.size, offset
+    buffer = @file.readSync offset, parser.size
     return parser.parse(buffer)
 
-  constructor: (@path) ->
-    @file = fs.openSync @path, 'r'
+  constructor: (@file) ->
     @header = @parse(BF.headerParser, 0)
 
     @folders = []
@@ -103,9 +102,20 @@ class BF
   list: ->
     out = []
     for filePath, file of @files
-      out.push path.join(@path, filePath)
+      out.push path.join(@file.path, filePath)
     out.sort()
     return out
+
+  read: (entry) ->
+    buffer = @file.readSync entry.offset + 4, entry.size
+    usize = buffer.readUInt32LE(0)
+    csize = buffer.readUInt32LE(4)
+
+    if (entry.name.endsWith '.bin') and (csize <= buffer.length)
+      buffer = buffer.slice 8, csize + 8
+      buffer = lzo.decompress buffer, usize
+
+    return buffer
 
 module.exports =
   BF: BF

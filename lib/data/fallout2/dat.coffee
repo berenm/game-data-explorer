@@ -1,9 +1,10 @@
 {allowUnsafeNewFunction} = require 'loophole'
 {Parser} = require 'binary-parser'
-{FourCC} = require '../../common/fourcc'
+{FourCC} = require '../fourcc'
 
 path = require 'path'
 fs = require 'fs'
+zlib = require 'zlib'
 
 class DAT
   @nameParser = new Parser()
@@ -42,20 +43,16 @@ class DAT
     1: 'zlib'
 
   parse: (parser, offset) ->
-    buffer = new Buffer parser.size
-    bytes = fs.readSync @file, buffer, 0, parser.size, offset
-    return parser.parse(buffer)
+    return parser.parse(@file.readSync offset, parser.size)
 
-  constructor: (@path) ->
-    @file = fs.openSync @path, 'r'
-    @fileSize = (fs.fstatSync @file).size
-    @footer = @parse DAT.footerParser, @fileSize - DAT.footerParser.size
-    if @footer.file_size isnt @fileSize
+  constructor: (@file) ->
+    @footer = @parse DAT.footerParser, @file.size - DAT.footerParser.size
+    if @footer.file_size isnt @file.size
       throw new Error 'Footer file size does not match file size'
 
     indexParser = DAT.indexParser
     indexParser.size = @footer.index_size
-    @index = @parse indexParser, @fileSize - @footer.index_size - DAT.footerParser.size
+    @index = @parse indexParser, @file.size - @footer.index_size - DAT.footerParser.size
 
     @files = []
     for file in @index.files
@@ -64,8 +61,14 @@ class DAT
   list: ->
     out = []
     for filePath, file of @files
-      out.push path.join(@path, filePath)
+      out.push path.join(@file.path, filePath)
     return out
+
+  read: (entry) ->
+    if DAT.flags[entry.flags] is 'zlib'
+      return zlib.inflateSync(@file.readSync entry.offset, entry.size_compressed)
+    else
+      return @file.readSync entry.offset, entry.size_uncompressed
 
 module.exports =
   DAT: DAT

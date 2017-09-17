@@ -4,11 +4,10 @@
 path = require 'path'
 fs = require 'fs'
 
-class PCK
+class DIR
   @entryParser = new Parser()
     .endianess 'little'
     .string 'name', length: 32, stripNull: true
-    .uint32 'unknown'
     .uint32 'type'
     .uint32 'size'
     .uint32 'offset'
@@ -16,23 +15,22 @@ class PCK
   @entryParser.size = @entryParser.sizeOf()
 
   parse: (parser, offset) ->
-    buffer = new Buffer parser.size
     return parser.parse(@file.readSync offset, parser.size)
 
-  parseEntries: (parent, offset) ->
+  parseEntries: (folder, offset) ->
     loop
-      entry = @parse PCK.entryParser, offset
-      offset += PCK.entryParser.size
-      entry.name = "#{parent.name}/#{entry.name}"
-      @files[entry.name] = entry           if entry.type is 0
-      offset = @parseEntries entry, offset if entry.type is 1
-      break                                if entry.type is 0xff
+      entry = @parse DIR.entryParser, offset
+      offset += DIR.entryParser.size
+      entry.name = entry.name.replace /\x00.*$/g, ''
+      entry.name = "#{folder}#{entry.name}"
+      @files[entry.name] = entry                      if entry.type is 0xcdcdcd00
+      offset = @parseEntries "#{entry.name}/", offset if entry.type is 0xcdcdcd01
+      break                                           if entry.type is 0xcdcdcdff
     return offset
 
   constructor: (@file) ->
     @files = []
-    entry = @parse PCK.entryParser, 0
-    @parseEntries entry, PCK.entryParser.size
+    @parseEntries '', 0
 
   list: ->
     out = []
@@ -44,4 +42,4 @@ class PCK
     return @file.readSync entry.offset, entry.size
 
 module.exports =
-  PCK: PCK
+  DIR: DIR

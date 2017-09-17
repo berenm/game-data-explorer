@@ -1,7 +1,8 @@
 {allowUnsafeNewFunction} = require 'loophole'
 {Parser} = require 'binary-parser'
-{FourCC} = require '../common/fourcc'
-{BIFFV1} = require '../data/biffv1'
+{FourCC} = require '../fourcc'
+{BIFFV1} = require './biffv1'
+BinaryFile = require '../../core/binary-file'
 
 path = require 'path'
 fs = require 'fs'
@@ -87,12 +88,9 @@ class KEYV1
     '2066': 'ptt'
 
   parse: (parser, offset) ->
-    buffer = new Buffer parser.size
-    bytes = fs.readSync @file, buffer, 0, parser.size, offset
-    return parser.parse(buffer)
+    return parser.parse(@file.readSync offset, parser.size)
 
-  constructor: (@path) ->
-    @file = fs.openSync @path, 'r'
+  constructor: (@file) ->
     @magic = @parse(KEYV1.magicParser, 0)
     @header = @parse(KEYV1.headerParser, 8)
 
@@ -101,8 +99,7 @@ class KEYV1
       for i in [0..@header.bifCount - 1]
         bif = @parse KEYV1.bifParser, @header.bifTableOffset + i * KEYV1.bifParser.size
 
-        buffer = new Buffer bif.pathSize
-        fs.readSync @file, buffer, 0, bif.pathSize, bif.pathOffset
+        buffer = @file.readSync bif.pathOffset, bif.pathSize
         bif.path = buffer.toString()
           .replace /\x00+$/g, ''
           .replace '\\', '/'
@@ -128,8 +125,19 @@ class KEYV1
   list: ->
     out = []
     for resPath, res of @ress
-      out.push path.join(@path, @bifs[res.bifIndex].path, resPath)
+      out.push path.join(@file.path, @bifs[res.bifIndex].path, resPath)
     return out
+
+  read: (resPath) ->
+    res = @ress[path.basename(resPath)]
+    bif = @bifs[res.bifIndex]
+
+    if not bif.file
+      bif.file = new BinaryFile path.join(path.dirname(@file.path), bif.path)
+      bif.file.openSync()
+    bif.parser ?= new BIFFV1 bif.file
+
+    return bif.parser.read res
 
 module.exports =
   KEYV1: KEYV1

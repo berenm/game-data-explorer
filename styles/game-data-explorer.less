@@ -126,6 +126,14 @@
           };
           .generate-colors(@n, (@i + 1));
         }
+
+        .cursor {
+          padding-bottom: 0px;
+          border-bottom-width: 2px;
+          border-bottom-style: solid;
+          border-bottom-color: @syntax-cursor-color;
+          background-color: @syntax-selection-color
+        }
       }
 
       .hex-chars {
@@ -138,6 +146,14 @@
           display: inline;
           vertical-align: middle;
           padding: 2px 0 2px 0;
+        }
+
+        .cursor {
+          padding-bottom: 0px;
+          border-bottom-width: 2px;
+          border-bottom-style: solid;
+          border-bottom-color: @syntax-cursor-color;
+          background-color: @syntax-selection-color
         }
       }
     }

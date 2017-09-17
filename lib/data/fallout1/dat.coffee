@@ -1,9 +1,10 @@
 {allowUnsafeNewFunction} = require 'loophole'
 {Parser} = require 'binary-parser'
-{FourCC} = require '../../common/fourcc'
+{FourCC} = require '../fourcc'
 
 path = require 'path'
 fs = require 'fs'
+{LZSS} = require './lzss'
 
 class DAT
   @nameParser = new Parser()
@@ -49,15 +50,10 @@ class DAT
     64: 'lzss'
 
   parse: (parser) ->
-    buffer = new Buffer parser.size
-    bytes = fs.readSync @file, buffer, 0, parser.size
-    return parser.parse(buffer)
+    return parser.parse(@file.readSync 0, parser.size)
 
-  constructor: (@path) ->
-    @file = fs.openSync @path, 'r'
-    @fileSize = (fs.fstatSync @file).size
-
-    DAT.headerParser.size = @fileSize
+  constructor: (@file) ->
+    DAT.headerParser.size = @file.size
     @header = @parse DAT.headerParser
 
     @files = []
@@ -70,8 +66,14 @@ class DAT
   list: ->
     out = []
     for filePath, file of @files
-      out.push path.join(@path, filePath)
+      out.push path.join(@file.path, filePath)
     return out
+
+  read: (entry) ->
+    if DAT.flags[entry.flags] is 'lzss'
+      return LZSS.decompressSync(@file.readSync entry.offset, entry.size_compressed)
+    else
+      return @file.readSync entry.offset, entry.size_uncompressed
 
 module.exports =
   DAT: DAT

@@ -1,6 +1,6 @@
 {allowUnsafeNewFunction} = require 'loophole'
 {Parser} = require 'binary-parser'
-{FourCC} = require '../common/fourcc'
+{FourCC} = require '../fourcc'
 
 path = require 'path'
 fs = require 'fs'
@@ -41,12 +41,9 @@ class BIFFV1
   @magicParser.size = @magicParser.sizeOf()
 
   parse: (parser, offset) ->
-    buffer = new Buffer parser.size
-    bytes = fs.readSync @file, buffer, 0, parser.size, offset
-    return parser.parse(buffer)
+    return parser.parse(@file.readSync offset, parser.size)
 
-  constructor: (@path) ->
-    @file = fs.openSync @path, 'r'
+  constructor: (@file) ->
     @magic = @parse(BIFFV1.magicParser, 0)
     @header = @parse(BIFFV1.headerParser, 8)
 
@@ -59,6 +56,10 @@ class BIFFV1
     if @header.fixResCount > 0
       for i in [0..@header.fixResCount - 1]
         @fixRess.push @parse BIFFV1.fixResParser, null
+
+  read: (entry) ->
+    varRes = @varRess[entry.resIndex]
+    return @file.readSync varRes.offset, varRes.size
 
 module.exports =
   BIFFV1: BIFFV1
