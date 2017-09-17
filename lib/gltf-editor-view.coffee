@@ -36,12 +36,20 @@ class GLTFEditorView extends FileEditorView
       scene.clearColor = new BABYLON.Color4 0, 0, 0, 0
 
       if not scene.activeCamera
-        scene.activeCamera = new BABYLON.ArcRotateCamera('Camera', Math.PI, Math.PI / 8, 150, BABYLON.Vector3.Zero(), scene)
-        scene.activeCamera.attachControl(@canvas.context, true)
-        scene.activeCamera.zoomOn scene.meshes, false
-        scene.activeCamera.allowUpsideDown = false
-        scene.activeCamera.wheelPrecision = 1000 / scene.activeCamera.maxZ
-        scene.activeCamera.maxZ *= 4
+        camera = new BABYLON.ArcRotateCamera('Camera', 3 * Math.PI / 2, -Math.PI / 2, 50, BABYLON.Vector3.Zero(), scene)
+        camera.attachControl(@canvas.context, true)
+
+        camera.zoomOn scene.meshes, false
+        if (camera.maxZ < camera.minZ)
+          [camera.maxZ, camera.minZ] = [camera.minZ * 10, camera.maxZ / 10]
+        else
+          camera.maxZ = Math.max(10, camera.maxZ * 10)
+
+        camera.wheelPrecision = 20000 / camera.maxZ
+        camera.allowUpsideDown = false
+        camera.lowerRadiusLimit = camera.minZ * 2
+
+        scene.activeCamera = camera
 
       light = new BABYLON.HemisphericLight('hemi', new BABYLON.Vector3(0, 1, 0), scene)
 
