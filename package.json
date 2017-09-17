@@ -7,6 +7,7 @@
     "atom": "^1.1.0",
     "atom-space-pen-views": "^2.2.0",
     "babel-cli": "^6.26.0",
+    "babylonjs": "^3.1.0-alpha2",
     "binary-parser": "^1.1.5",
     "bluebird": "^0.11.6",
     "etch": "^0.12.6",
@@ -18,8 +19,6 @@
     "lzo": "^0",
     "serializable": "^1",
     "temp": "~0.8.1",
-    "three": "^0",
-    "three-orbit-controls": "^0",
     "underscore-plus": "^1.6.6"
   },
   "devDependencies": {

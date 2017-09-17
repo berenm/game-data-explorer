@@ -1,13 +1,9 @@
 FileEditorView = require './file-editor-view'
 
 fs = require 'fs'
+path = require 'path'
 
-THREE = require 'three'
-OrbitControls = require 'three-orbit-controls'
-THREE.OrbitControls = OrbitControls THREE
-
-GLTFLoader = require './data/three-gltf-loader.js'
-THREE.GLTFLoader = GLTFLoader THREE
+BABYLON = require './ext/babylonjs'
 
 module.exports =
 class GLTFEditorView extends FileEditorView
@@ -16,62 +12,36 @@ class GLTFEditorView extends FileEditorView
       @div class: 'gde-container', =>
         @div class: 'model-container', =>
           @div class: 'model-cell', =>
-            @span class: 'model', outlet: 'container'
+            @canvas class: 'model', outlet: 'canvas'
 
   onResize: =>
-    @camera.aspect = @container.width() / @container.height()
-    @camera.updateProjectionMatrix()
-    @renderer.setSize @container.width(), @container.height()
-    true
-
-  animate: =>
-    if @mixer
-      requestAnimationFrame @animate
-      @mixer.update @clock.getDelta()
-
-    THREE.GLTFLoader.Shaders.update @scene, @camera
-    @controls.update()
-    @renderer.render @scene, @camera
+    rect = @engine.getRenderingCanvasClientRect()
+    @canvas.context.width = rect.width
+    @canvas.context.height = rect.height
+    @engine.resize
 
   refresh: ->
+    @engine = new BABYLON.Engine(@canvas.context, true)
+
+    BABYLON.SceneLoader.Load path.dirname(@path) + '/', path.basename(@path), @engine, (scene) =>
+      scene.clearColor = new BABYLON.Color4 0, 0, 0, 0
+
+      if not scene.activeCamera
+        scene.activeCamera = new BABYLON.ArcRotateCamera('Camera', Math.PI, Math.PI / 8, 150, BABYLON.Vector3.Zero(), scene)
+        scene.activeCamera.attachControl(@canvas.context, true)
+        scene.activeCamera.zoomOn scene.meshes, false
+        scene.activeCamera.allowUpsideDown = false
+        scene.activeCamera.wheelPrecision = 1000 / scene.activeCamera.maxZ
+        scene.activeCamera.maxZ *= 4
+
+      light = new BABYLON.HemisphericLight('hemi', new BABYLON.Vector3(0, 1, 0), scene)
+
+      @engine.runRenderLoop ->
+        scene.render()
+
+    setTimeout =>
+      rect = @engine.getRenderingCanvasClientRect()
+      @canvas.context.width = rect.width
+      @canvas.context.height = rect.height
+
     addEventListener 'resize', @onResize, false
-    @container.on 'contextmenu', -> false
-
-    @clock = new THREE.Clock()
-
-    @renderer = new THREE.WebGLRenderer {antialias: true}
-    @renderer.setClearColor 0x222222
-    @renderer.setSize @container.width(), @container.height()
-
-    @canvas = @renderer.domElement
-    @container.append @canvas
-
-    THREE.GLTFLoader.Shaders.removeAll()
-    @model = new THREE.GLTFLoader()
-    @model.load @path, (gltf) =>
-      @scene = gltf.scene
-
-      if gltf.cameras and gltf.cameras.length > 0
-        @camera = gltf.cameras[0]
-        @camera.position.z = 10
-      else
-        @camera = new THREE.PerspectiveCamera 75, @container.width() /  @container.height(), 0.001, 1000
-        @camera.position.z = 10
-
-      @controls = new THREE.OrbitControls @camera, @renderer.domElement
-      @controls.enableDamping = true
-      @controls.dampingFactor = 0.25
-      @controls.enableZoom = true
-
-      if gltf.animations and gltf.animations.length > 0
-        @mixer = new THREE.AnimationMixer gltf.scene
-        for animation in gltf.animations
-          @mixer.clipAction(animation).play()
-      else
-        @controls.addEventListener 'change', =>
-          THREE.GLTFLoader.Shaders.update @scene, @camera
-          @renderer.render @scene, @camera
-
-      setTimeout =>
-        @onResize()
-        @animate()
