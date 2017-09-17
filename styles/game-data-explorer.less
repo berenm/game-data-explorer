@@ -85,75 +85,87 @@
       padding: @component-padding;
       background: @syntax-background-color;
       overflow: auto;
+      display: flex;
       white-space: nowrap;
       -webkit-user-select: none;
 
-      .hex-line {
-        display: block;
+      .hex-controls {
+        order: 2;
+        flex: auto;
       }
 
-      .hex-metric {
-        visibility: hidden;
-        position: absolute;
-      }
+      .hex-contents {
+        order: 1;
+        flex: none;
+        height: 100%;
 
-      .hex-offset {
-        display: inline;
-        vertical-align: middle;
-        margin-right: 10px;
+        .hex-line {
+          display: block;
+        }
 
-        color: @syntax-gutter-text-color;
-        background: @syntax-gutter-background-color;
-      }
+        .hex-metric {
+          visibility: hidden;
+          position: absolute;
+        }
 
-      .hex-bytes {
-        display: inline-block;
-        margin-right: 10px;
-        color: @syntax-text-color;
-        background: @syntax-background-color;
-
-        .hex-byte {
+        .hex-offset {
           display: inline;
           vertical-align: middle;
-          padding: 2px 3px 2px 3px;
+          margin-right: 10px;
+
+          color: @syntax-gutter-text-color;
+          background: @syntax-gutter-background-color;
         }
 
-        .generate-colors(255);
-        .generate-colors(@n, @i: 0) when (@i =< @n) {
-          .color-@{i} {
-            color: spin(@syntax-text-color, floor(@i * 360 / 256));
-            background-color: spin(@syntax-background-color, floor(@i * 360 / 256));
-          };
-          .generate-colors(@n, (@i + 1));
+        .hex-bytes {
+          display: inline-block;
+          margin-right: 10px;
+          color: @syntax-text-color;
+          background: @syntax-background-color;
+
+          .hex-byte {
+            display: inline;
+            vertical-align: middle;
+            padding: 2px 3px 2px 3px;
+          }
+
+          .generate-colors(255);
+          .generate-colors(@n, @i: 0) when (@i =< @n) {
+            .color-@{i} {
+              color: spin(@syntax-text-color, floor(@i * 360 / 256));
+              background-color: spin(@syntax-background-color, floor(@i * 360 / 256));
+            };
+            .generate-colors(@n, (@i + 1));
+          }
+
+          .cursor {
+            padding-bottom: 0px;
+            border-bottom-width: 2px;
+            border-bottom-style: solid;
+            border-bottom-color: @syntax-cursor-color;
+            background-color: @syntax-selection-color
+          }
         }
 
-        .cursor {
-          padding-bottom: 0px;
-          border-bottom-width: 2px;
-          border-bottom-style: solid;
-          border-bottom-color: @syntax-cursor-color;
-          background-color: @syntax-selection-color
-        }
-      }
+        .hex-chars {
+          display: inline-block;
+          margin-right: 10px;
+          color: @syntax-gutter-text-color;
+          background: @syntax-gutter-background-color;
 
-      .hex-chars {
-        display: inline-block;
-        margin-right: 10px;
-        color: @syntax-gutter-text-color;
-        background: @syntax-gutter-background-color;
+          .hex-char {
+            display: inline;
+            vertical-align: middle;
+            padding: 2px 0 2px 0;
+          }
 
-        .hex-char {
-          display: inline;
-          vertical-align: middle;
-          padding: 2px 0 2px 0;
-        }
-
-        .cursor {
-          padding-bottom: 0px;
-          border-bottom-width: 2px;
-          border-bottom-style: solid;
-          border-bottom-color: @syntax-cursor-color;
-          background-color: @syntax-selection-color
+          .cursor {
+            padding-bottom: 0px;
+            border-bottom-width: 2px;
+            border-bottom-style: solid;
+            border-bottom-color: @syntax-cursor-color;
+            background-color: @syntax-selection-color
+          }
         }
       }
     }
