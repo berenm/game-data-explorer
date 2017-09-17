@@ -20,8 +20,17 @@ class GLTFEditorView extends FileEditorView
     @canvas.context.height = rect.height
     @engine.resize
 
+  render: =>
+    @scene.render()
+
   refresh: ->
     @engine = new BABYLON.Engine(@canvas.context, true)
+
+    @editorSubscriptions.add atom.workspace.onDidDestroyPaneItem (event) =>
+      if event.item is @editor
+        @engine.stopRenderLoop @render
+        @scene = null
+        @engine = null
 
     BABYLON.SceneLoader.Load path.dirname(@path) + '/', path.basename(@path), @engine, (scene) =>
       scene.clearColor = new BABYLON.Color4 0, 0, 0, 0
@@ -36,8 +45,8 @@ class GLTFEditorView extends FileEditorView
 
       light = new BABYLON.HemisphericLight('hemi', new BABYLON.Vector3(0, 1, 0), scene)
 
-      @engine.runRenderLoop ->
-        scene.render()
+      @scene = scene
+      @engine.runRenderLoop @render
 
     setTimeout =>
       rect = @engine.getRenderingCanvasClientRect()
