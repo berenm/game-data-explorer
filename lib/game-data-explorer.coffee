@@ -1,27 +1,16 @@
-path = require 'path'
-fs = require 'fs-plus'
-
-TGAEditor = require './tga-editor'
-WAVEditor = require './wav-editor'
-MDLEditor = require './mdl-editor'
-GLTFEditor = require './gltf-editor'
-HEXEditor = require './hex-editor'
-
-textOrBin = require 'istextorbinary'
-
 module.exports =
 class GameDataExplorer
   @editors:
     '.key': (filePath) ->
       try return new (require './aurora-keyv1-editor')(path: filePath) catch
       return null
-    '.mdl': (filePath) -> return new MDLEditor(path: filePath)
-    '.tga': (filePath) -> return new TGAEditor(path: filePath)
-    '.wav': (filePath) -> return new WAVEditor(path: filePath)
-    '.wad': (filePath) -> return new WAVEditor(path: filePath)
-    '.waa': (filePath) -> return new WAVEditor(path: filePath)
-    '.wam': (filePath) -> return new WAVEditor(path: filePath)
-    '.wac': (filePath) -> return new WAVEditor(path: filePath)
+    '.mdl': (filePath) -> return new (require './mdl-editor')(path: filePath)
+    '.tga': (filePath) -> return new (require './tga-editor')(path: filePath)
+    '.wav': (filePath) -> return new (require './wav-editor')(path: filePath)
+    '.wad': (filePath) -> return new (require './wav-editor')(path: filePath)
+    '.waa': (filePath) -> return new (require './wav-editor')(path: filePath)
+    '.wam': (filePath) -> return new (require './wav-editor')(path: filePath)
+    '.wac': (filePath) -> return new (require './wav-editor')(path: filePath)
     '.dir': (filePath) ->
       try return new (require './commandos1-dir-editor')(path: filePath) catch
       return null
@@ -39,9 +28,11 @@ class GameDataExplorer
     '.bf': (filePath) ->
       try return new (require './beyond-good-and-evil-bf-editor')(path: filePath) catch
       return null
-    '.gltf': (filePath) -> return new GLTFEditor(path: filePath)
+    '.gltf': (filePath) -> return new (require './gltf-editor')(path: filePath)
 
   @activate: ->
+    fs = require 'fs-plus'
+    path = require 'path'
     @opener = atom.workspace.addOpener (filePath = '') =>
       if fs.isFileSync(filePath)
         extName = path.extname(filePath).toLowerCase()
@@ -53,8 +44,9 @@ class GameDataExplorer
         buffer = new Buffer 256
         file = fs.openSync filePath, 'r'
         bytes = fs.readSync file, buffer, 0, 256, 0
+        textOrBin = require 'istextorbinary'
         if textOrBin.isBinarySync filePath, buffer.slice(0, bytes)
-          return new HEXEditor(path: filePath)
+          return new (require './hex-editor')(path: filePath)
 
   @deactivate: ->
     @opener.dispose()
