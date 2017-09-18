@@ -58,7 +58,8 @@
       "no-console": 0,
       "react/react-in-jsx-scope": 0,
       "react/no-string-refs": 0,
-      "promise/avoid-new": 0
+      "promise/avoid-new": 0,
+      "no-constant-condition": ["error", { "checkLoops": false }]
     }
   }
 }
