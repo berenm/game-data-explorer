@@ -1,6 +1,6 @@
 {
   "name": "game-data-explorer",
-  "version": "0.0.13",
+  "version": "0.0.14",
   "description": "Explore video game engines assets using Atom",
   "main": "./lib/game-data-explorer",
   "dependencies": {
@@ -62,7 +62,12 @@
       "react/react-in-jsx-scope": 0,
       "react/no-string-refs": 0,
       "promise/avoid-new": 0,
-      "no-constant-condition": ["error", { "checkLoops": false }]
+      "no-constant-condition": [
+        "error",
+        {
+          "checkLoops": false
+        }
+      ]
     }
   }
 }
