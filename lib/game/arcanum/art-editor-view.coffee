@@ -1,9 +1,9 @@
-FileEditorView = require './file-editor-view'
+FileEditorView = require '../../file-editor-view'
 
 exec = require('child_process').execSync
 fs = require 'fs'
 
-{ART} = require './data/arcanum/art'
+{ART} = require './art'
 
 module.exports =
 class ARTEditorView extends FileEditorView

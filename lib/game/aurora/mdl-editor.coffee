@@ -1,4 +1,4 @@
-FileEditor = require './file-editor'
+FileEditor = require '../../file-editor'
 
 module.exports =
 class MDLEditor extends FileEditor

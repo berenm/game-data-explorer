@@ -1,6 +1,6 @@
 {allowUnsafeNewFunction} = require 'loophole'
 {Parser} = require 'binary-parser'
-{FourCC} = require '../fourcc'
+{FourCC} = require '../../core/util'
 
 path = require 'path'
 fs = require 'fs'
