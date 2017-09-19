@@ -1,6 +1,6 @@
 {
   "name": "game-data-explorer",
-  "version": "0.0.14",
+  "version": "0.0.15",
   "description": "Explore video game engines assets using Atom",
   "main": "./lib/game-data-explorer",
   "dependencies": {
